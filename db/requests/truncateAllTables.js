@@ -1,0 +1,13 @@
+const truncateAllSQL = `DO $$ DECLARE
+r RECORD;
+BEGIN
+FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = current_schema()) LOOP
+EXECUTE 'TRUNCATE TABLE ' || quote_ident(r.tablename) || '';
+END LOOP;
+END $$;`
+
+async function truncateAllTables(){
+    return await this.query(truncateAllSQL);
+}
+
+module.exports = truncateAllTables;
