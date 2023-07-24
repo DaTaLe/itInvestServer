@@ -10,5 +10,6 @@ LIMIT=20
 ```
 ### Run
 ```shell
+npm i
 npm run start
 ```
