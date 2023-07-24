@@ -9,7 +9,7 @@ async function app(){
 
     // Db init
     await dbCtr.init();
-    dbCtr.setTruncate('*/5 * * * *');
+    dbCtr.setTruncate(process.env.DB_CLEAR_STR);
 
     // Controllers
     const getSecurity = require('./controllers/getSecurity');
