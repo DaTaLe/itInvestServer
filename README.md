@@ -1,4 +1,4 @@
-# itInvestServer
+# someServer
 Postgres is needed to be running on localhost:5432.
 Database, tables will be created automatically
 ### .env file content
@@ -6,7 +6,7 @@ Database, tables will be created automatically
 ```dotenv
 PORT=3000
 PG_SECRET='Your Postgres pass'
-DB_NAME='itInvest'
+DB_NAME='someNewDbName'
 DB_NAME_INIT='postgres'
 DELAY=1000
 LIMIT=20
