@@ -10,7 +10,7 @@ $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;`
 
-async function createFuncNotifyNewTrade(){
+async function createFuncNotifyNewTrade() {
     return await this.query(notifyFuncSQL);
 }
 

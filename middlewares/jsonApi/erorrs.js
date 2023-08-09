@@ -1,7 +1,6 @@
 const safeInitApi = require('./_initApi');
 
 
-
 function notFoundMiddleware(req, res, next) {
     safeInitApi(res);
     return res.error(404, 'Not found').json();

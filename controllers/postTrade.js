@@ -1,7 +1,13 @@
 const dbCtr = require('../db/index');
 const {isInt, isStr} = require('./utils');
 
-async function postTrade(req,res) {
+/**
+ * Add new Trade to db
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @returns {Promise<void>}
+ */
+async function postTrade(req, res) {
     let price = req.body.price;
     let size = Number(req.body.size);
     let side = Boolean(req.body.side);
@@ -9,13 +15,13 @@ async function postTrade(req,res) {
     let security = Number(req.body.security);
 
     if (!isStr(price)) {
-        res.error(400,'Bad request',`price required and must be an string`).json();
+        res.error(400, 'Bad request', `price required and must be an string`).json();
     }
     if (!isStr(client)) {
-        res.error(400,'Bad request',`client required and must be an string`).json();
+        res.error(400, 'Bad request', `client required and must be an string`).json();
     }
     if (!isInt(size)) {
-        res.error(400,'Bad request',`size required and must be an integer`).json();
+        res.error(400, 'Bad request', `size required and must be an integer`).json();
     }
     if (!isInt(security)) {
         res.error(400, 'Bad request', `security required and must be an integer`).json();

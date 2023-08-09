@@ -17,17 +17,17 @@ function _setMeta(res) {
 function _setPagination(res) {
     function func(currentPage, limit, totalCount) {
         let pagination = {};
-    
+
         if (currentPage != null)
             pagination.page = currentPage;
-       
+
         if (limit)
             pagination.limit = limit;
-    
+
         if (totalCount != null)
             pagination.total = totalCount;
 
-        if (currentPage != null && limit != null && totalCount != null){
+        if (currentPage != null && limit != null && totalCount != null) {
 
             let host = res.req.headers.host;
             let requestQuery = res.req._parsedUrl.query;
@@ -42,7 +42,7 @@ function _setPagination(res) {
             let numLimit = Number(limit);
             let numTotalCount = Number(totalCount);
 
-            let nextPage = numCurrentPage + 1 > numTotalCount ? numCurrentPage: numCurrentPage + 1;
+            let nextPage = numCurrentPage + 1 > numTotalCount ? numCurrentPage : numCurrentPage + 1;
 
             let nextPageUrl = `http://${host}${baseUrl}${pathname}?page=${nextPage}&limit=${numLimit}&${clearRequestQuery}`;
 
@@ -51,7 +51,7 @@ function _setPagination(res) {
 
         if (Object.keys(pagination).length > 0)
             res.meta({pagination});
-    
+
         return res;
     }
 
@@ -63,18 +63,18 @@ function _setError(res) {
     function func(statusCode, title, details, stackTrace) {
         if (!statusCode)
             return res;
-    
+
         res[KEY].errors || (res[KEY].errors = []);
         res.status(statusCode);
-    
+
         const errObj = {
-            status: statusCode, 
+            status: statusCode,
             title: title || res.statusMessage, // TODO res.statusMessage всегда undefined
             details: details,
             stackTrace: stackTrace
         }
         res[KEY].errors.push(errObj);
-    
+
         return res;
     }
 
@@ -82,24 +82,21 @@ function _setError(res) {
 }
 
 
-
 function _setJson(res) {
     let oldJson = res.json;
 
     function func(data) {
         data !== undefined && (res[KEY].data = data);
-        res[KEY].isSuccess = res.statusCode < 400 ? true : false,
+        res[KEY].isSuccess = res.statusCode < 400;
 
-        // data !== undefined && (res[KEY] = data);
+            // data !== undefined && (res[KEY] = data);
 
-        res.json = oldJson;           // set function back to avoid the 'double-send'
+            res.json = oldJson;           // set function back to avoid the 'double-send'
         return res.json(res[KEY]);     // just call as normal with data
     }
 
     return func;
 }
-
-
 
 
 function initApi(res) {
@@ -109,11 +106,11 @@ function initApi(res) {
 
     res[KEY] = {};
 
-    res.meta       = _setMeta(res);
+    res.meta = _setMeta(res);
     res.pagination = _setPagination(res);
-    res.error      = _setError(res);
-    res._json      = res.json;
-    res.json       = _setJson(res);
+    res.error = _setError(res);
+    res._json = res.json;
+    res.json = _setJson(res);
 }
 
 

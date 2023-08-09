@@ -1,7 +1,13 @@
 const dbCtr = require('../db/index');
 const {checkPagination, getOffset} = require('./utils');
 
-async function getSecurity(req,res) {
+/**
+ * Express controller. Get some Security from db using pagination limit&offset || page&limit
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @returns {Promise<void>}
+ */
+async function getSecurity(req, res) {
     let page = req.query.page;
     let limit = req.query.limit || 20;
     let offset = req.query.offset;
@@ -9,7 +15,7 @@ async function getSecurity(req,res) {
     checkPagination(req, res, page, limit, offset);
 
     if (!(Number.isInteger(Number(limit)) && (limit > 1 && limit <= 20))) {
-        res.error(400,'Bad request',`limit must be an integer 1<limit<=20`).json();
+        res.error(400, 'Bad request', `limit must be an integer 1<limit<=20`).json();
     }
 
     offset = getOffset(page, limit, offset);

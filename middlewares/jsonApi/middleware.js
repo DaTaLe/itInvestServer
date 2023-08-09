@@ -6,5 +6,4 @@ async function jsonApiMiddleware(req, res, next) {
 }
 
 
-
 module.exports = jsonApiMiddleware;

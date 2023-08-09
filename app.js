@@ -5,7 +5,7 @@ const lpGetter = require("express-longpoll");
 let dbCtr = require('./db/index');
 
 
-async function app(){
+async function app() {
 
     // Db init
     await dbCtr.init();
@@ -46,13 +46,17 @@ async function app(){
     // Errors
     app.use(jsonApi.errors.internal);
 
-    let longPoll = lpGetter(rootRouter, { DEBUG: false});
+    let longPoll = lpGetter(rootRouter, {DEBUG: false});
 
     //Long poll requests
     longPoll.create("/trades");
 
-    function ntfCallback(msg){
-        switch (msg.channel){
+    /**
+     * postgres message handler callback
+     * @param msg
+     */
+    function ntfCallback(msg) {
+        switch (msg.channel) {
             case 'new_trade':
                 let payload = JSON.parse(msg.payload);
                 longPoll.publish("/trades", payload);
@@ -67,6 +71,24 @@ async function app(){
     app.listen(process.env.PORT, () => {
         console.log(`Started on PORT: ${process.env.PORT}`);
     });
+
+    /**
+     * Close clients and exit the process
+     * @param {NodeJS.SignalsListener} signal
+     */
+    async function signalHandler(signal) {
+        console.log('Exiting...');
+        await dbCtr.notifyListener.release();
+        await dbCtr.end();
+        process.exit()
+    }
+
+    process.on('SIGINT', signalHandler)
+    process.on('SIGTERM', signalHandler)
+    process.on('SIGQUIT', signalHandler)
 }
 
-app();
+if (require.main === module) {
+    app();
+}
+
